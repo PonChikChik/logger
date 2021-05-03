@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.ponchikchik.logger.R
+import com.ponchikchik.logger.di.repository.ApiRepository
+import com.ponchikchik.logger.ui.ViewModelFactory
+import com.ponchikchik.logger.utils.ApiHelper
+import com.ponchikchik.logger.utils.ApiStatus.*
 
 class HomeFragment : Fragment() {
 
@@ -20,12 +23,35 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+            ViewModelProviders.of(
+                this,
+                ViewModelFactory(ApiHelper(ApiRepository.amwayStartService))
+            )
+                .get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
         val textView: TextView = root.findViewById(R.id.text_home)
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
+        homeViewModel.text.observe(viewLifecycleOwner, {
             textView.text = it
         })
+
+        setupObservers()
+
         return root
+    }
+
+    private fun setupObservers() {
+        homeViewModel.getAllLogs().observe(viewLifecycleOwner, {
+            when (it.status) {
+                SUCCESS -> {
+                    it.data
+                }
+                ERROR -> {
+
+                }
+                LOADING -> {
+
+                }
+            }
+        })
     }
 }
