@@ -1,4 +1,4 @@
-package com.ponchikchik.logger.ui.notifications
+package com.ponchikchik.logger.ui.view_models
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

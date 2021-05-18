@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ponchikchik.logger.R
+import com.ponchikchik.logger.ui.view_models.NotificationsViewModel
 
 class NotificationsFragment : Fragment() {
 

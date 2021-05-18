@@ -1,20 +1,16 @@
-package com.ponchikchik.logger.ui.home
+package com.ponchikchik.logger.ui.view_models
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.ponchikchik.logger.di.model.Log
-import com.ponchikchik.logger.di.repository.ApiRepository
 import com.ponchikchik.logger.di.repository.MainRepository
-import com.ponchikchik.logger.di.service.AmwayStartService
 import com.ponchikchik.logger.utils.Resource
-import com.squareup.okhttp.Dispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import java.lang.Exception
+import java.util.*
 
-class HomeViewModel(private var mainRepository: MainRepository) : ViewModel() {
+class AmwayLoggerViewModel(private var mainRepository: MainRepository) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is home Fragment"
@@ -25,6 +21,15 @@ class HomeViewModel(private var mainRepository: MainRepository) : ViewModel() {
         emit(Resource.loading(data = null))
         try {
             emit(Resource.success(data = mainRepository.getAllLogs()))
+        } catch (exception: Exception) {
+            emit(Resource.error(null, exception.message ?: "Error Occurred!"))
+        }
+    }
+
+    fun getLogByTraceId(traceId: UUID) = liveData(IO) {
+        emit(Resource.loading(data = null))
+        try {
+            emit(Resource.success(data = mainRepository.getLogByTraceId(traceId)))
         } catch (exception: Exception) {
             emit(Resource.error(null, exception.message ?: "Error Occurred!"))
         }
